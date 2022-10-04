@@ -24,6 +24,7 @@ func (z *FS) Open(name string) (fs.File, error) {
 	return z.zipr.Open(name)
 }
 
+// Close frees resources associated with the FS file
 func (z *FS) Close() error {
 	if err := z.seekable.Close(); err != nil {
 		return err
@@ -36,6 +37,9 @@ func (z *FS) Close() error {
 	return nil
 }
 
+// Open opens a seekable zstd compressed zip file and returns a fs.FS (.zip.zst)
+// zip files should use the "Store" compression method to let zstd do the compression,
+// you can use the zipstd/cmd/create.go tool to create such a zip file.
 func Open(path string) (*FS, error) {
 	f, err := os.Open(path)
 	if err != nil {
