@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.0
-	github.com/klauspost/compress v1.15.11
+	github.com/klauspost/compress v1.17.2
 )
 
 require (
