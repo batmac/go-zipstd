@@ -1,4 +1,4 @@
-module zipstd
+module github.com/batmac/zipstd
 
 go 1.19
 
