@@ -3,6 +3,7 @@ package zipstd
 
 import (
 	"archive/zip"
+	"bytes"
 	"io"
 	"io/fs"
 	"os"
@@ -45,12 +46,15 @@ func Open(path string) (*FS, error) {
 	if err != nil {
 		return nil, err
 	}
+	return NewFS(f)
+}
 
+func NewFS(file io.ReadSeekCloser) (*FS, error) {
 	dec, err := zstd.NewReader(nil)
 	if err != nil {
 		return nil, err
 	}
-	sr, err := seekable.NewReader(f, dec)
+	sr, err := seekable.NewReader(file, dec)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +64,7 @@ func Open(path string) (*FS, error) {
 	if err != nil {
 		sr.Close()
 		dec.Close()
-		f.Close()
+		file.Close()
 		return nil, err
 	}
 	// rewind
@@ -68,7 +72,7 @@ func Open(path string) (*FS, error) {
 	if err != nil {
 		sr.Close()
 		dec.Close()
-		f.Close()
+		file.Close()
 		return nil, err
 	}
 
@@ -76,7 +80,7 @@ func Open(path string) (*FS, error) {
 	if err != nil {
 		sr.Close()
 		dec.Close()
-		f.Close()
+		file.Close()
 		return nil, err
 	}
 
@@ -84,6 +88,29 @@ func Open(path string) (*FS, error) {
 		zipr:     zipr,
 		zstddec:  dec,
 		seekable: sr,
-		source:   f,
+		source:   file,
 	}, nil
 }
+
+func NewFromFS(fsys fs.FS, path string) (*FS, error) {
+	data, err := fs.ReadFile(fsys, path)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewFromBytes(data)
+}
+
+func NewFromBytes(data []byte) (*FS, error) {
+	return NewFS(nopCloser(bytes.NewReader(data)))
+}
+
+func nopCloser(r *bytes.Reader) io.ReadSeekCloser {
+	return nopCloserWriterTo{r}
+}
+
+type nopCloserWriterTo struct {
+	*bytes.Reader
+}
+
+func (nopCloserWriterTo) Close() error { return nil }
