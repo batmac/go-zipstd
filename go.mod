@@ -6,7 +6,7 @@ toolchain go1.25.6
 
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.1
-	github.com/klauspost/compress v1.18.2
+	github.com/klauspost/compress v1.18.3
 )
 
 require (
