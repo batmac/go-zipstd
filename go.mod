@@ -1,12 +1,12 @@
 module github.com/batmac/zipstd
 
-go 1.23
+go 1.24
 
 toolchain go1.26.1
 
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.1
-	github.com/klauspost/compress v1.18.4
+	github.com/klauspost/compress v1.18.5
 )
 
 require (
