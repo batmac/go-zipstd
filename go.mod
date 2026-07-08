@@ -2,7 +2,7 @@ module github.com/batmac/zipstd
 
 go 1.24
 
-toolchain go1.26.4
+toolchain go1.26.5
 
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.1
